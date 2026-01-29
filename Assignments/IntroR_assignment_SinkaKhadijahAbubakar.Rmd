@@ -30,7 +30,7 @@ o	How do you find the installed and loaded packages?
 Answer: In the Packages pane (usually bottom-right, next to plots). All installed packages would show up in there and the loaded ones would be checked.
 
 o	What is a working directory, and how do you find it? 
-Answer: This is the folder that R uses to read and save files, and yoy can find it with getwd().
+Answer: This is the folder that R uses to read and save files, and you can find it with getwd().
 
 o	What is a relative file path and how is it different than an absolute file path? 
 Answer: A relative path is based on the working directory, while an absolute path gives the full location from the root folder of your computer.
@@ -63,12 +63,14 @@ Complete all tasks in an R script and push it to GitHub.
 o	Create a vector named 'z' with the values 1 to 200
 
 ```{r}
+# Creating a vector named 'z' with values 1 to 200
 z = 1:200
 ```
 
 o	Print the mean and standard deviation of z on the console
 
 ```{r}
+# Printing the mean and standard deviation of z
 mean(z)
 sd(z)
 ```
@@ -76,35 +78,41 @@ sd(z)
 o	Create a logical vector named zlog that is 'TRUE' for z values greater than 30 and 'FALSE' otherwise.
 
 ```{r}
+# Creating a logical vector 'zlog' that is TRUE for z > 30
 zlog = z > 30
 ```
 
 o	Make a dataframe with z and zlog as columns. Name the dataframe zdf
 
 ```{r}
+# Making a dataframe with z and zlog as columns
 zdf = data.frame(z, zlog)
 ```
 
 o	Change the column names in your new dataframe to equal “zvec” and “zlogic”
 
 ```{r}
- colnames(zdf) = c("zvec", "zlogic")
+# Changing the column names to "zvec" and "zlogic"
+colnames(zdf) = c("zvec", "zlogic")
 ```
 
 o	Make a new column in your dataframe equal to zvec squared (i.e., z2). Call the new column zsquared. 
 
 ```{r}
-zdf$zsquared <- zdf$zvec^2
+# Making a new column in the dataframe which is equal to zvec squared
+zdf$zsquared = zdf$zvec^2
 ```
 
 o	Subset the dataframe with and without the subset() function to only include values of zsquared greater than 10 and less than 100 
 
 ```{r}
+# Subsetting the dataframe to include zsquared > 10 and < 100 (using subset function)
 subset(zdf, zsquared > 10 & zsquared < 100)
 ```
 
 
 ```{r}
+# Subsetting the dataframe to include zsquared > 10 and < 100 (without using subset function)
 zdf[zdf$zsquared > 10 & zdf$zsquared < 100, ]
 ```
 
@@ -112,13 +120,32 @@ zdf[zdf$zsquared > 10 & zdf$zsquared < 100, ]
 o	Subset the zdf dataframe to only include the values on row 26
 
 ```{r}
+# Subsetting the dataframe to only include row 26
 zdf[26, ]
 ```
 
 o	Subset the zdf dataframe to only include the values in the column zsquared in the 180th row.
 
 ```{r}
+# Subsetting the dataframe to only include the value in zsquared at row 180
 zdf$zsquared[180]
 ```
 
+
+### Question 5 (3 pts.)
+Download the Tips.csv file from Canvas. Use the read.csv() function to read the data into R using a relative file path  and so that the missing values are properly coded. **Note the missing values are reported in the data as a period (i.e., “.”). How do you know the data were read correctly? 
+
+```{r}
+# Reading the Tips.csv file with missing values 
+tips <- read.csv("TipsR.csv", na.strings = ".")
+
+# Viewing the first few rows to check the data to make sure it was read correctly
+head(tips)
+```
+
+
+```{r}
+# Checking for the missing values in the data
+sum(is.na(tips))
+```
 
