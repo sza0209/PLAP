@@ -1,0 +1,124 @@
+# Intro to R Assignment
+
+# Name: Sinka Khadijah Abubakar
+
+### Question 1 (5 pts.)
+Explain the following things about R and Rstudio: 
+
+o	Where do you type code? 
+Answer: Script Editor (usually top-left pane)
+
+o	Where is the output of the code? 
+Answer: Console (usually bottom left pane)
+
+o	Where do plots show up?
+Answer: In the Plots pane (usually bottom-right).
+
+o	What is a global environment? 
+Answer: This is where R stores objects (data, variables, functions) that we create.
+
+o	How do you get help for a function through R studio? 
+Answer: Use ?functionName or help(functionName).
+
+o	What is an R package? 
+Answer: It is simply a collection of functions, data, and documentation
+
+o	What is a function? 
+Answer: It is simply a reusable block of code that performs a specific task.
+
+o	How do you find the installed and loaded packages? 
+Answer: In the Packages pane (usually bottom-right, next to plots). All installed packages would show up in there and the loaded ones would be checked.
+
+o	What is a working directory, and how do you find it? 
+Answer: This is the folder that R uses to read and save files, and yoy can find it with getwd().
+
+o	What is a relative file path and how is it different than an absolute file path? 
+Answer: A relative path is based on the working directory, while an absolute path gives the full location from the root folder of your computer.
+
+
+### Question 2 (2 pts.)
+Explain the steps to start a new R project connected to a GitHub repository
+
+Create a new repository on GitHub.Open RStudio and create a new project. To do this, in RStudio, go to File > New Project > Version Control > Git.Copy and paste the repository URL and choose a folder on your computer to save the project.  
+
+
+### Question 3 (3 pts.)
+Please explain the different data classes and how they are similar and different from each other.
+
+o	Vector
+Answer: A 1-dimensional collection of elements of the same type (numeric, character, logical, etc.).
+
+o	Dataframe
+Answer: A 2-dimensional table where columns can be different types (numeric, character, logical, etc.).
+
+o	Matrix
+Answer: A 2-dimensional array (rows and columns) where all elements must be the same type.
+
+All three store multiple values and can be indexed, but vectors are 1D, while matrices and data frames are 2D.
+
+
+### Question 4 (10 pts.)
+Complete all tasks in an R script and push it to GitHub.
+
+o	Create a vector named 'z' with the values 1 to 200
+
+```{r}
+z = 1:200
+```
+
+o	Print the mean and standard deviation of z on the console
+
+```{r}
+mean(z)
+sd(z)
+```
+
+o	Create a logical vector named zlog that is 'TRUE' for z values greater than 30 and 'FALSE' otherwise.
+
+```{r}
+zlog = z > 30
+```
+
+o	Make a dataframe with z and zlog as columns. Name the dataframe zdf
+
+```{r}
+zdf = data.frame(z, zlog)
+```
+
+o	Change the column names in your new dataframe to equal “zvec” and “zlogic”
+
+```{r}
+ colnames(zdf) = c("zvec", "zlogic")
+```
+
+o	Make a new column in your dataframe equal to zvec squared (i.e., z2). Call the new column zsquared. 
+
+```{r}
+zdf$zsquared <- zdf$zvec^2
+```
+
+o	Subset the dataframe with and without the subset() function to only include values of zsquared greater than 10 and less than 100 
+
+```{r}
+subset(zdf, zsquared > 10 & zsquared < 100)
+```
+
+
+```{r}
+zdf[zdf$zsquared > 10 & zdf$zsquared < 100, ]
+```
+
+
+o	Subset the zdf dataframe to only include the values on row 26
+
+```{r}
+zdf[26, ]
+```
+
+o	Subset the zdf dataframe to only include the values in the column zsquared in the 180th row.
+
+```{r}
+zdf$zsquared[180]
+```
+
+
