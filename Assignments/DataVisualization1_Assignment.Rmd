@@ -1,0 +1,149 @@
+# Data Visualization 1 Assignment
+
+# Name: Sinka Khadijah Abubakar
+
+### Question 1 (5 pts.)
+
+Explain the following concepts about ggplot
+
+a. What three elements do you need to produce a ggplot?
+Answer: (1) a dataset 
+        (2) aesthetic mappings defined with aes() (such as x and y variables)
+        (3) at least one geom to tell ggplot how to draw the data.
+
+b. What is a geom?
+Answer: A geom is the geometric object that represents the data visually, such as points (geom_point()), boxes (geom_boxplot()), bars (geom_bar() or stat_summary()), or lines (geom_line()).
+
+c. What is a facet?
+Answer: A facet splits the data into multiple panels based on the levels of a categorical variable, allowing comparisons across groups using the same axes.
+
+d. Explain the concept of layering.
+Answer: Layering means building a plot by adding multiple components (geoms, scales, labels) using the "+" sign, with each layer drawn in order from background to foreground.
+
+e. Where do you add x and y variables and map different shapes, colors, and other attributes to the data?
+Answer: X and y variables and aesthetic mappings are added inside the aes() function, either in the main ggplot() call or within individual geoms.
+
+
+
+### Question 2 (4 pts.)
+
+Make a boxplot using ggplot with DON as the y variable, treatment as the x
+variable, and color mapped to the wheat cultivar. Change the y label to “DON (ppm)” and
+make the x label blank.
+
+```{r}
+# Loading ggplot2 library
+library(ggplot2)
+
+# Loading and checking mycotoxin data
+mycotoxin <- read.csv("MycotoxinData.csv")
+str(mycotoxin)
+```
+
+```{r}
+# Changing DON from character to numeric vaiable
+mycotoxin$DON = as.numeric(mycotoxin$DON)
+
+# Making a boxplot using ggplot with DON as the y variable, treatment as the x variable, and color mapped to the wheat cultivar
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar)) +
+  geom_boxplot() +
+  xlab("") +              # leaving the x label blank
+  ylab("DON (ppm)")       # Changing the y label to “DON (ppm)”
+```
+
+
+### Question 3 (4 pts.)
+
+Now convert this data into a bar chart with standard-error error bars using the stat_summary() command. (hint: use position = dodge)
+
+```{r}
+# Plotting the data as a bar chart with standard error bars
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar, fill = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+
+### Question 4 (3 pts.)
+
+Add points to the foreground of the boxplot and bar chart you made in questions 2 & 3 that show the distribution of points. Set the shape = 21 and the outline color black (hint: use jitter_dodge).
+
+
+```{r}
+# Box plot with points to the foreground
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black") +  ## adding points to the foreground, setting the shape = 21 and the outline color black
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+```{r}
+# Bar chart with points to the foreground
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar, fill = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black") +  ## adding points to the foreground, setting the shape = 21 and the outline color black
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+### Question 5 (2 pts.)
+Add a facet to the plots based on cultivar.
+
+```{r}
+# Adding facet to box plot based on cultivar
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black") +
+  facet_wrap(~Cultivar) +    ## adding facet based on cultivar
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+```{r}
+# Adding facet to box plot based on cultivar
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar, fill = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black") +
+   facet_wrap(~Cultivar) +     ## adding facet based on cultivar
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+### Question 6 (3 pts.)
+
+Add transparency to the points so you can still see the boxplot or bar in the
+background.
+
+```{r}
+# Making points on the boxplot transparent to see the boxplot
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar)) +
+  geom_boxplot() +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black", alpha = 0.4) +  # adding "alpha = 0.4" argument to make points transparent
+  facet_wrap(~Cultivar) +
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
+
+
+```{r}
+# Making points on the bar chart transparent to see the bar chart
+ggplot(mycotoxin, aes(x = Treatment, y = DON, color = Cultivar, fill = Cultivar)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = "dodge") +
+  geom_point(position = position_jitterdodge(dodge.width = 0.9),shape = 21,color = "black", alpha = 0.4) +  # adding "alpha = 0.4" argument to make points transparent
+   facet_wrap(~Cultivar) +
+  xlab("") +
+  ylab("DON (ppm)")
+```
+
