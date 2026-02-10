@@ -11,7 +11,7 @@ library(ggrepel)
 cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 
 
-sample.data.bac <- read.csv("C:/Users/sza0209/Downloads/BacterialAlpha.csv", na.strings = "na")
+sample.data.bac <- read.csv("Assignments/BacterialAlpha.csv", na.strings = "na")
 sample.data.bac$Time_Point <- as.factor(sample.data.bac$Time_Point)
 sample.data.bac$Crop <- as.factor(sample.data.bac$Crop)
 sample.data.bac$Crop <- factor(sample.data.bac$Crop, levels = c("Soil", "Cotton", "Soybean"))
@@ -111,7 +111,7 @@ water.imbibed.cor +
 
 #### Differential abundance test for plotting while emphasizing most significant points ####
 
-diff.abund <- read.csv("C:/Users/sza0209/Downloads/diff_abund.csv")
+diff.abund <- read.csv("Assignments/diff_abund.csv")
 str(diff.abund)
 
 diff.abund$log10_pvalue <- -log10(diff.abund$p_CropSoybean)
