@@ -17,24 +17,23 @@ library(ggplot2)
 library(ggpubr)
 
 # Loading and checking mycotoxin data
-mycotoxin <- read.csv(file.choose(), na.strings = "na")
-#mycotoxin <- read.csv("MycotoxinData.csv", na.strings = "na")
+mycotoxin <- read.csv("MycotoxinData.csv", na.strings = "na")
 str(mycotoxin)
-
-# Changing DON from character to numeric vaiable
-#mycotoxin$DON = as.numeric(mycotoxin$DON)
 ```
 
 
 ```{r}
+# Defining cbbPalette
+cbbPalette <- c("#000000", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
 # creating a boxplot of DON by Treatment
 plotA = ggplot(mycotoxin, aes(x = Treatment, y = DON, fill = Cultivar)) +
   geom_boxplot(position = position_dodge()) +
-  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, chainging transparency of pounts to 0.6
+  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, changing transparency of points to 0.6
   scale_fill_manual(values = c(cbbPalette[[3]], cbbPalette[[4]])) +
   facet_wrap(~Cultivar) +    # faceting cultivar
   xlab("") +
-  ylab("DON (ppm)") +    # labelling y-axis
+  ylab("DON (ppm)") +    # labeling y-axis
   theme_classic()       # adding theme classic
 plotA
 ```
@@ -45,6 +44,7 @@ plotA
 Change the factor order level so that the treatment “NTC” is first, followed by “Fg”, “Fg + 37”, “Fg + 40”, and “Fg + 70. 
 
 ```{r}
+# Changing the factor order level for treatment
 mycotoxin$Treatment <- factor(mycotoxin$Treatment,
                               levels = c("NTC", "Fg", "Fg + 37", "Fg + 40", "Fg + 70"))
 ```
@@ -59,11 +59,11 @@ Change the y-variable to plot X15ADON and MassperSeed_mg. The y-axis label shoul
 # creating a boxplot of X15ADON by Treatment
 plotB = ggplot(mycotoxin, aes(x = Treatment, y = X15ADON, fill = Cultivar)) +
   geom_boxplot(position = position_dodge()) +
-  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, chainging transparency of pounts to 0.6
+  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, changing transparency of points to 0.6
   scale_fill_manual(values = c(cbbPalette[[3]], cbbPalette[[4]]), labels = c("NTC", "Fg", "Fg + 37", "Fg + 40", "Fg + 70")) +
   facet_wrap(~Cultivar) +    # faceting cultivar
   xlab("") +
-  ylab("15ADON") +    # labelling y-axis
+  ylab("15ADON") +    # labeling y-axis
   theme_classic()
 plotB
 ```
@@ -73,11 +73,11 @@ plotB
 # creating a boxplot of MassperSeed_mg by Treatment
 plotC = ggplot(mycotoxin, aes(x = Treatment, y = MassperSeed_mg, fill = Cultivar)) +
   geom_boxplot(position = position_dodge()) +
-  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, chainging transparency of pounts to 0.6
+  geom_point(aes(fill = Cultivar), shape = 21, position = position_jitterdodge(dodge.width = 0.9), alpha = 0.6, color = "black") +     # Jittering points, changing transparency of points to 0.6
   scale_fill_manual(values = c(cbbPalette[[3]], cbbPalette[[4]]), labels = c("NTC", "Fg", "Fg + 37", "Fg + 40", "Fg + 70")) +
   facet_wrap(~Cultivar) +    # faceting cultivar
   xlab("") +
-  ylab("Seed Mass (mg)") +    # labelling y-axis
+  ylab("Seed Mass (mg)") +    # labeling y-axis
   theme_classic()
 plotC
 ```
@@ -89,10 +89,11 @@ Use ggarrange function to combine all three figures into one with three columns 
 a.	HINT: I didn’t specifically cover this in the tutorial, but you can go to the help page for the ggarange function to figure out what the common.legend option does and how to control it. 
 
 ```{r}
+# Using ggarrange function to combine all three figures into one with three columns and one row.
 figure <- ggarrange(
-  plotA,  # First plot
-  plotB,  # Second plot
-  plotC,  # Third plot
+  plotA,  # First plot (DON by Treatment)
+  plotB,  # Second plot (X15ADON by Treatment)
+  plotC,  # Third plot (MassperSeed_mg by Treatment)
   labels = c("A", "B", "C"),  # label the plots (A, B, C)
   nrow = 1,  # Arrange the plots in 3 rows
   ncol = 3,  # Arrange the plots in 1 column
@@ -108,6 +109,7 @@ The common.legend option combines the legends from all plots into one shared leg
 Use geom_pwc() to add t.test pairwise comparisons to the three plots made above. Save each plot as a new R object, and combine them again with ggarange as you did in question 4. Your final plot should look something like this. 
 
 ```{r}
+# adding t.test pairwise comparisons to all the plots above
 plotD <- plotA +
   geom_pwc(aes(group = Treatment), method = "t_test", label = "{p.adj.format}{p.adj.signif}")
 
@@ -120,10 +122,11 @@ plotF <- plotC +
 
 
 ```{r}
+# Using ggarrange function to combine all three figures into one with three columns and one row.
 figure2 <- ggarrange(
-  plotD,  # First plot
-  plotE,  # Second plot
-  plotF,  # Third plot
+  plotD,  # First plot (pwc_DON by Treatment)
+  plotE,  # Second plot (pwc_X15ADON by Treatment)
+  plotF,  # Third plot (pwc_MassperSeed_mg by Treatment)
   labels = c("A", "B", "C"),  # label the plots (A, B, C)
   nrow = 1,  # Arrange the plots in 3 rows
   ncol = 3,  # Arrange the plots in 1 column
