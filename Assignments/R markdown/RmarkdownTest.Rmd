@@ -1,0 +1,66 @@
+---
+title: "R markdown tutorial"
+author: "Sinka Abubakar"
+date: "2026-02-17"
+output: 
+  md_document:
+    variant: gfm
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+  word_document:
+---
+
+This is an example of R code.
+```{r R code example}
+# this is R code
+summary(mtcars)
+```
+
+
+This is how to include figures
+```{r Include figures}
+library(ggplot2)
+data("mtcars")
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point()
+```
+
+
+R markdown formatting options
+
+# First-level header
+
+example text
+
+*this text is italic*
+
+**this text is italic**
+
+Lists
+
+1. one item
+2. another item
+   - one subitem
+
+## Links
+
+[Link to my github](https://github.com/sza0209/PLAP/tree/main)
+
+
+## Images
+
+
+## Formatted tables
+```{r}
+library(knitr)
+kable(mtcars, digits = 3, format = "markdown")
+```
+
+
+> "I thoroughly disapprove of duels. If a man should challenge me,
+  I would take him kindly and forgivingly by the hand and lead him
+  to a quiet place and kill him."
+>
+> --- Mark Twain
