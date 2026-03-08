@@ -3,14 +3,15 @@ title: "Data Wrangling"
 author: "Sinka Khadijah Abubakar"
 date: "2026-03-08"
 output: 
-  md_document:
-    variant: gfm
   html_document:
     toc: true
     toc_float: true
   pdf_document:
+  md_document:
+    variant: gfm
   word_document:
 ---
+
 
 Question 1. Download two .csv files from Canvas called DiversityData.csv and Metadata.csv, and read them into R using relative file paths.
 
@@ -113,3 +114,9 @@ ggplot(plot_data, aes(x = Time_Point, y = value, color = diff)) +
   theme_minimal()
 ```
 
+
+Question 7. Commit and push a gfm .md file to GitHub inside a directory called Coding Challenge 5. Provide me a link to your github written as a clickable link in your .pdf or .docx
+
+**GitHub Repository**
+
+[View my Coding Challenge 5 on GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/Coding%20Challenge5/Data-Wrangling.md)

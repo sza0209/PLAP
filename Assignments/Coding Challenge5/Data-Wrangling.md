@@ -184,3 +184,12 @@ ggplot(plot_data, aes(x = Time_Point, y = value, color = diff)) +
     ## generated.
 
 ![](Data-Wrangling_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+Question 7. Commit and push a gfm .md file to GitHub inside a directory
+called Coding Challenge 5. Provide me a link to your github written as a
+clickable link in your .pdf or .docx
+
+**GitHub Repository**
+
+[View my Coding Challenge 5 on
+GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/Coding%20Challenge5/Data-Wrangling.md)
