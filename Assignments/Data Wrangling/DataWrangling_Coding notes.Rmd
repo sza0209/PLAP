@@ -12,7 +12,7 @@ library(tidyverse)
 loading the data
 
 ```{r}
-microbiome.fungi <- read.csv("Assignments/Data Wrangling/Bull_richness.csv")
+microbiome.fungi <- read.csv("Bull_richness.csv")
 str(microbiome.fungi)
 ```
 
