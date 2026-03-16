@@ -1,0 +1,197 @@
+---
+title: "CodingNotes"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(drc)
+library(tidyverse)
+```
+
+manually converting fahrenheit to celsius
+
+```{r}
+(5*(32 - 32)/9)
+(5*(80 - 32)/9)
+```
+
+converting it into a function
+
+```{r}
+F_to_C <- function(fahrenheit_temp){
+  celsius <- (5*(fahrenheit_temp - 32)/9)
+  return(celsius)
+}
+
+F_to_C(32)
+F_to_C(80)
+```
+
+function to convert celsius to fahrenheit
+
+```{r}
+C_to_F <- function(celsius_temp){
+  fahrenheit <- (celsius_temp*(9/5)+32)
+  return(fahrenheit)
+}
+
+C_to_F(0)
+C_to_F(26.66667)
+```
+
+Iterations functions in base R
+
+the rep() function (allows you to repeat elements easily)
+```{r}
+rep("A", 3) # repeats A three times 
+```
+
+```{r}
+rep(c("A", "B"), 5) # repeats A and B, 5 times 
+```
+
+```{r}
+rep(c(1,2,3,4), times = 4) # repeats 1,2,3,4, 4 times 
+```
+
+```{r}
+rep(c(1,2,5,2), times = 4, each = 4) # repeats 1 four times, 2 four times, 5 four times, and 2 four times. 
+```
+
+
+seq() command allows you to write sequences of numbers easily
+```{r}
+seq(from = 1, to = 7) # sequence of numbers 1 to 7
+```
+
+```{r}
+seq(from = 0, to = 10, by = 2) # sequence of numbers from 0 to 10 by 2s
+```
+
+
+combined seq() and rep()
+```{r}
+rep(seq(from = 0, to = 10, by = 2), times = 3, each = 2)
+```
+
+
+seq_along() function (allows you to generate a sequence of numbers based on non-integer values.)
+```{r}
+LETTERS
+seq_along(LETTERS)
+```
+
+
+The for loop
+
+```{r}
+for (i in 1:10) {
+print(i*2)  
+}
+```
+
+```{r}
+for (i in -30:10){
+  result <- F_to_C(i)
+  print(result)
+}
+```
+
+
+```{r}
+celcius.df <- NULL 
+for (i in -30:100){   
+result_i <- data.frame(F_to_C(i), i)   
+celcius.df <- rbind.data.frame(celcius.df, result_i) 
+}
+```
+
+
+practical example
+
+```{r}
+# read in the data
+EC50.data <- read.csv("EC50_all.csv")
+```
+
+calculating manually
+```{r}
+isolate1 <- drm(100 * EC50.data$relgrowth[EC50.data$is == "ILSO_5-41c"] ~ 
+        EC50.data$conc[EC50.data$is == "ILSO_5-41c"], 
+                       fct = LL.4(fixed = c(NA, NA, NA, NA), 
+                                  names = c("Slope", "Lower", "Upper", "EC50")), 
+                       na.action = na.omit)
+    summary.fit <- data.frame(summary(isolate1)[[3]])
+    EC50 <- ED(isolate1, respLev = c(50), type = "relative", 
+        interval = "delta")[[1]]
+    
+EC50
+```
+
+The loop
+```{r}
+nm <- unique(EC50.data$is)
+```
+
+
+```{r}
+for (i in seq_along(nm)) {
+  isolate1 <- drm(100 * EC50.data$relgrowth[EC50.data$is == nm[[i]]] ~ 
+        EC50.data$conc[EC50.data$is == nm[[i]]], 
+                       fct = LL.4(fixed = c(NA, NA, NA, NA), 
+                                  names = c("Slope", "Lower", "Upper", "EC50")), 
+                       na.action = na.omit)
+    summary.fit <- data.frame(summary(isolate1)[[3]])
+    EC50 <- ED(isolate1, respLev = c(50), type = "relative", 
+        interval = "delta")[[1]]
+    EC50
+}
+```
+
+saving the results in a new dataframe
+
+```{r}
+EC50.ll4 <- NULL 
+for (i in seq_along(nm)) {
+  isolate1 <- drm(100 * EC50.data$relgrowth[EC50.data$is == nm[[i]]] ~ 
+        EC50.data$conc[EC50.data$is == nm[[i]]], 
+                       fct = LL.4(fixed = c(NA, NA, NA, NA), 
+                                  names = c("Slope", "Lower", "Upper", "EC50")), 
+                       na.action = na.omit)
+    summary.fit <- data.frame(summary(isolate1)[[3]])
+    EC50 <- ED(isolate1, respLev = c(50), type = "relative", 
+        interval = "delta")[[1]]
+    EC50
+    isolate.ec_i <- data.frame(nm[[i]], EC50)
+    colnames(isolate.ec_i) <- c("Isolate", "EC50") 
+    EC50.ll4 <- rbind.data.frame(EC50.ll4, isolate.ec_i)
+}
+```
+
+plotting final dataset
+
+```{r}
+ggplot(EC50.ll4, aes(x = EC50)) + 
+  geom_histogram() + 
+  theme_classic()
+```
+
+Using map with the tidy verse
+
+```{r}
+EC50.data %>%
+  group_by(is) %>%
+  nest() %>%
+  mutate(ll.4.mod = map(data, ~drm(.$relgrowth ~ .$conc, 
+                              fct = LL.4(fixed = c(NA, NA, NA, NA), 
+                                         names = c("Slope", "Lower", "Upper", "EC50"))))) %>%
+  mutate(ec50 = map(ll.4.mod, ~ED(., 
+                              respLev = c(50), 
+                              type = "relative",
+                              interval = "delta")[[1]])) %>%
+  unnest(ec50)
+```
+
+
+
