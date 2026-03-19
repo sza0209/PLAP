@@ -146,4 +146,4 @@ written as a clickable link in your .pdf or .docx
 **GitHub Repository**
 
 [View my Coding Challenge 6 on
-GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/Coding%20Challenge5/IterationsAndFunctions.md)
+GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/IterationsAndFunctions/CodingChallenge.md)

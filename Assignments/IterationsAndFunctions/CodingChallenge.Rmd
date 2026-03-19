@@ -3,10 +3,10 @@ title: "Iterations and Functions"
 author: "Sinka Khadijah Abubakar"
 date: "2026-03-19"
 output: 
+  html_document:
+  pdf_document:
   md_document:
     variant: gfm
-  pdf_document:
-  html_document:
   word_document:
 ---
 
@@ -116,4 +116,4 @@ Question 7 (2 pts):Commit and push a gfm .md file to GitHub inside a directory c
 
 **GitHub Repository**
 
-[View my Coding Challenge 6 on GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/Coding%20Challenge5/IterationsAndFunctions.md)
+[View my Coding Challenge 6 on GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/IterationsAndFunctions/CodingChallenge.md)
