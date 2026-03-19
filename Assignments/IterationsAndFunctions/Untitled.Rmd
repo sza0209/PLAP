@@ -1,0 +1,119 @@
+---
+title: "Iterations and Functions"
+author: "Sinka Khadijah Abubakar"
+date: "2026-03-19"
+output: 
+  md_document:
+    variant: gfm
+  pdf_document:
+  html_document:
+  word_document:
+---
+
+Question 1 (2 pts): Regarding reproducibility, what is the main point of writing your own functions and iterations?
+
+Answer: The main point of writing your own functions and iterations is to reduce the chances of copy and paste errors and also make analyses more reproducible.
+
+
+Question 2 (2 pts): In your own words, describe how to write a function and a for loop in R and how they work. Give me specifics like syntax, where to write code, and how the results are returned.
+
+Answer: In R, a function is created using the function() command, where you give the function a name, define the inputs in parentheses, and write the code inside curly braces {}. The function performs operations on the inputs and can return a result using the return() statement. A for loop is used to repeat code multiple times and has the syntax for (i in sequence) {code}, where the loop variable "i" takes on each value in the sequence and the code inside the braces is executed for each value.
+
+
+Question 3 (2 pts): Read in the Cities.csv file from Canvas using a relative file path.
+
+```{r}
+cities <- read.csv("Cities.csv")
+head(cities)
+```
+
+
+Question 4 (6 pts): Write a function to calculate the distance between two pairs of coordinates based on the Haversine formula (see below). The input into the function should be lat1, lon1, lat2, and lon2. The function should return the object distance_km. All the code below needs to go into the function.
+
+```{r}
+# Function to calculate distance using the Haversine formula
+haversine_distance <- function(lat1, lon1, lat2, lon2) {
+  # Convert degrees to radians
+  rad.lat1 <- lat1 * pi / 180
+  rad.lon1 <- lon1 * pi / 180
+  rad.lat2 <- lat2 * pi / 180
+  rad.lon2 <- lon2 * pi / 180
+  
+  # Haversine formula
+  delta_lat <- rad.lat2 - rad.lat1
+  delta_lon <- rad.lon2 - rad.lon1
+  a <- sin(delta_lat / 2)^2 + cos(rad.lat1) * cos(rad.lat2) * sin(delta_lon / 2)^2
+  c <- 2 * asin(sqrt(a))
+  
+  # Earth's radius in meters
+  earth_radius <- 6378137
+  
+  # Calculate distance in kilometers
+  distance_km <- (earth_radius * c) / 1000
+  
+  # Return the distance
+  return(distance_km)
+}
+```
+
+
+Question 5 (5 pts): Using your function, compute the distance between Auburn, AL and New York City
+a. Subset/filter the Cities.csv data to include only the latitude and longitude values you need and input as input to your function.
+b. The output of your function should be 1367.854 km
+
+```{r}
+#Subsetting the dataset for Auburn, AL and New York City
+auburn <- cities[cities$city == "Auburn", ]
+nyc <- cities[cities$city == "New York", ]
+```
+
+
+```{r}
+#Extracting latitude and longitude for each city
+lat1 <- auburn$lat
+lon1 <- auburn$long
+
+lat2 <- nyc$lat
+lon2 <- nyc$long
+```
+
+
+```{r}
+#Using the Haversine function to calculate distance
+distance <- haversine_distance(lat1, lon1, lat2, lon2)
+distance
+```
+
+Question 6 (6 pts): Now, use your function within a for loop to calculate the distance between all other cities in the data. The output of the first 9 iterations is shown below.
+
+```{r}
+#Initialize an empty dataframe
+distances_df <- NULL
+
+#Looping through all cities
+for (i in seq_along(cities$city)) {
+  # Extract coordinates for the current city
+  lat2 <- cities$lat[i]
+  lon2 <- cities$long[i]
+  
+  # Calculate distance using the Haversine function
+  distance_km <- haversine_distance(lat1, lon1, lat2, lon2)
+  
+  # Create a temporary dataframe for this iteration
+  city_dist_i <- data.frame(city1 = "Auburn",
+                            city2 = cities$city[i],
+                            distance_km = distance_km)
+  
+  # Append the row to the main dataframe
+  distances_df <- rbind.data.frame(distances_df, city_dist_i)
+}
+
+# View first 6 rows
+head(distances_df)
+```
+
+Question 7 (2 pts):Commit and push a gfm .md file to GitHub inside a directory called Coding Challenge 6. Provide me a link to your github written as a clickable link in your .pdf or .docx
+
+**GitHub Repository**
+
+[View my Coding Challenge 6 on GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/Coding%20Challenge5/IterationsAndFunctions.md)
