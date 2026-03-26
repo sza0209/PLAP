@@ -1,0 +1,167 @@
+---
+title: "Linear Model"
+author: "Sinka Khadijah Abubakar"
+date: "2026-03-26"
+output: 
+  html_document:
+  pdf_document:
+  md_document:
+    variant: gfm
+  word_document:
+---
+
+Question 1 (4 pts).
+Read in the data called “PlantEmergence.csv” using a relative file path and load the following libraries. tidyverse, lme4, emmeans, multcomp, and multcompView. Turn the Treatment , DaysAfterPlanting and Rep into factors using the function as.factor
+
+```{r}
+# Loading libraries
+library(tidyverse)
+library(lme4)
+library(emmeans)
+library(multcomp)
+library(multcompView)
+```
+
+
+```{r}
+# reading in the data
+STAND <- read.csv("PlantEmergence.csv")
+```
+
+
+```{r}
+# Converting variables into factors
+STAND$Treatment <- as.factor(STAND$Treatment)
+STAND$DaysAfterPlanting <- as.factor(STAND$DaysAfterPlanting)
+STAND$Rep <- as.factor(STAND$Rep)
+```
+
+
+Question 2 (5 pts)
+Fit a linear model to predict Emergence using Treatment and DaysAfterPlanting along with the interaction. Provide the summary of the linear model and ANOVA results.
+
+```{r}
+# fitting a linear model with an interaction term
+lm.emerge <- lm(Emergence ~ Treatment * DaysAfterPlanting, data = STAND)
+```
+
+
+```{r}
+# providing the summary
+summary(lm.emerge)
+```
+
+
+```{r}
+# running ANOVA
+anova(lm.emerge)
+```
+
+
+Question 3 (5 pts)
+Based on the results of the linear model in question 2, do you need to fit the interaction term? Provide a simplified linear model without the interaction term but still testing both main effects. Provide the summary and ANOVA results. Then, interpret the intercept and the coefficient for Treatment 2.
+
+Answer
+The interaction between Treatment and DaysAfterPlanting was not significant (ANOVA, p = 1.00), indicating that the effect of treatment did not change over time. And since the interaction is not significant (p = 1), we do not need to include the interaction term in the final model.
+
+
+```{r}
+# Simplified linear model without the interaction term
+lm.simple <- lm(Emergence ~ Treatment + DaysAfterPlanting, data = STAND)
+
+# summary 
+summary(lm.simple)
+
+#anova
+anova(lm.simple)
+```
+
+Interpretation of the intercept and the coefficient for Treatment 2
+
+The coefficient for Treatment 2 (-134.53) indicates that emergence in Treatment 2 was approximately 135 plants lower than in Treatment(p < 2e-16).
+
+
+Question 4 (5 pts)
+Calculate the least square means for Treatment using the emmeans package and perform a Tukey separation with the compact letter display using the cld function.
+Interpret the results.
+
+```{r}
+# Calculating least square means for Treatment
+lsm.trt <- emmeans(lm.simple, ~ Treatment)
+lsm.trt
+```
+
+```{r}
+# performing a Tukey separation with the compact letter display
+library(multcompView)
+tukey.trt <- cld(lsm.trt, alpha = 0.05, Letters = letters, adjust = "tukey")
+tukey.trt
+```
+
+Interpretation
+Least square means were calculated to estimate the average plant emergence for each treatment while accounting for variation across days after planting. The adjusted means showed that Treatment 2 had substantially lower emergence (mean ≈ 56 plants) compared to all other treatments, which ranged from approximately 188 to 201 plants.
+
+Tukey’s multiple comparison test with compact letter display confirmed these differences. Treatment 2 was assigned to its own group (“a”), indicating that it was significantly different from all other treatments. Treatments 3, 5, and 6 formed the highest-performing group (“c”), while Treatments 1, 4, 8, and 9 were intermediate (“bc”) and did not differ significantly from either the high or moderate groups. Treatment 7 formed a slightly lower group (“b”) but was still significantly higher than Treatment 2.
+
+
+
+Question 5 (4 pts)
+The provided function lets you dynamically add a linear model plus one factor from that model and plots a bar chart with letters denoting treatment differences. Use this model to generate the plot shown below. Explain the significance of the letters.
+
+```{r}
+# function 
+plot_cldbars_onefactor <- function(lm_model, factor) {
+  data <- lm_model$model
+  variables <- colnames(lm_model$model)
+  dependent_var <- variables[1]
+  independent_var <- variables[2:length(variables)]
+  lsmeans <- emmeans(lm_model, as.formula(paste("~", factor))) # estimate lsmeans
+  Results_lsmeans <- cld(lsmeans, alpha = 0.05, reversed = TRUE, details =
+TRUE, Letters = letters) # contrast with Tukey adjustment by default.
+  
+  # Extracting the letters for the bars
+  sig.diff.letters <- data.frame(Results_lsmeans$emmeans[,1],
+                                str_trim(Results_lsmeans$emmeans[,7]))
+  colnames(sig.diff.letters) <- c(factor, "Letters")
+  
+  # for plotting with letters from significance test
+  ave_stand2 <- lm_model$model %>%
+    group_by(!!sym(factor)) %>%
+    dplyr::summarize(
+      ave.emerge = mean(.data[[dependent_var]], na.rm = TRUE),
+      se = sd(.data[[dependent_var]]) / sqrt(n())
+    ) %>%
+    left_join(sig.diff.letters, by = factor) %>%
+    mutate(letter_position = ave.emerge + 10 * se)
+  
+  plot <- ggplot(data, aes(x = !! sym(factor), y = !! sym(dependent_var))) +
+    stat_summary(fun = mean, geom = "bar") +
+    stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.5) +
+    ylab("Number of emerged plants") +
+    geom_jitter(width = 0.02, alpha = 0.5) +
+    geom_text(data = ave_stand2, aes(label = Letters, y = letter_position), size = 5) +
+    xlab(as.character(factor)) +
+    theme_classic()
+  
+return(plot)
+}
+```
+
+
+```{r}
+# Generate the plot using simplified model and Treatment as the factor
+plot_cldbars_onefactor(lm.simple, "Treatment")
+```
+
+
+Significance of the letters
+Letters above each bar represent results of Tukey-adjusted pairwise comparisons of the least square means. Treatments that share the same letter are NOT significantly different from each other.Treatments with different letters are significantly different. 
+
+
+
+Question 6 (2 pts)
+Generate the gfm .md file along with a .html, .docx, or .pdf. Commit, and push the .md file to github and turn in the .html, .docx, or .pdf to Canvas. Provide me a link here to your github.
+
+**GitHub Repository**
+
+[View my Coding Challenge 7 on GitHub](https://github.com/sza0209/PLAP/blob/main/Assignments/LinearModels/LinearModelCodingChallenge.md)
