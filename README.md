@@ -1,4 +1,4 @@
-### PLAP Reproducibility class
+### PLPA Reproducibility class
 
 **Coding challenge 4**
 
